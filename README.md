@@ -3,6 +3,6 @@
 ## Distributed Information System for Banking Transactions
 
 ## **Team Members**:
-### **Dobre** Marina-Iulia
-### **Pena** Andrei-Alexandru
-### **Teică** David-Ștefan
+### _Dobre_ Marina-Iulia
+### _Pena_ Andrei-Alexandru
+### _Teică_ David-Ștefan
