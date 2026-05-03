@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container-fluid py-5 mb-5 shadow-sm" style="border-radius: 20px; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); margin-top: 10px;">
+    <div class="row align-items-center px-4 py-5">
+        <div class="col-lg-6 mb-5 mb-lg-0 text-center text-lg-start">
+            <h1 class="display-4 fw-bold text-bank mb-4" style="letter-spacing: -1px;">Banking for the modern world.</h1>
+            <p class="lead text-muted mb-5">
+                Manage your money, issue virtual cards, and pay utilities instantly. All from one secure, lightning-fast platform.
+            </p>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Profile" asp-action="Index" class="btn btn-bank btn-lg px-5 shadow-sm rounded-pill fw-bold">
+                    <i class="bi bi-speedometer2 me-2"></i> Go to Dashboard
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn btn-bank btn-lg px-5 shadow-sm rounded-pill me-lg-3 mb-3 mb-lg-0 fw-bold">
+                    Open an Account
+                </a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg px-5 rounded-pill fw-bold">
+                    Log In
+                </a>
+            }
+        </div>
+
+        <div class="col-lg-6 text-center d-none d-lg-block">
+            <div class="position-relative d-inline-block">
+                <div class="card shadow-lg border-0" style="width: 350px; height: 220px; background: linear-gradient(135deg, #2575fc, #6a11cb); border-radius: 20px; transform: rotate(-8deg);"></div>
+                <div class="card shadow-lg border-0 position-absolute top-0 start-0" style="width: 350px; height: 220px; background: #ffffff; border-radius: 20px; transform: rotate(5deg); transition: transform 0.3s ease;" onmouseover="this.style.transform='rotate(0deg) scale(1.05)'" onmouseout="this.style.transform='rotate(5deg) scale(1)'">
+                    <div class="p-4 text-start d-flex flex-column h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-auto">
+                            <i class="bi bi-bank text-bank fs-1"></i>
+                            <i class="bi bi-wifi fs-3 text-muted"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-dark fw-bold mb-3" style="letter-spacing: 3px; font-family: 'Courier New', monospace;">**** **** **** 4281</h4>
+                            <div class="d-flex justify-content-between align-items-end">
+                                <div>
+                                    <small class="text-muted d-block" style="font-size: 0.65rem;">CARD HOLDER</small>
+                                    <span class="text-dark fw-bold small">SMART CLIENT</span>
+                                </div>
+                                <i class="bi bi-cc-mastercard fs-1 text-warning" style="line-height: 0.5;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5 pb-4">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-bank">Everything you need, zero hassle.</h2>
+        <p class="text-muted">Built for speed, security, and simplicity. Discover our core features.</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm p-4 text-center hover-lift" style="border-radius: 15px; transition: transform 0.2s;">
+                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4 mx-auto" style="width: 70px; height: 70px;">
+                    <i class="bi bi-credit-card-2-front text-bank fs-2"></i>
+                </div>
+                <h5 class="fw-bold">Smart Cards</h5>
+                <p class="text-muted small mb-0">Issue Visa or Mastercard instantly. Block or unblock them with a single tap. Complete control over your plastic.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm p-4 text-center hover-lift" style="border-radius: 15px; transition: transform 0.2s;">
+                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4 mx-auto" style="width: 70px; height: 70px;">
+                    <i class="bi bi-lightning-charge-fill text-warning fs-2"></i>
+                </div>
+                <h5 class="fw-bold">Instant Transfers</h5>
+                <p class="text-muted small mb-0">Send money to anyone in seconds. Real-time processing for internal transfers with zero commission fees.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm p-4 text-center hover-lift" style="border-radius: 15px; transition: transform 0.2s;">
+                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4 mx-auto" style="width: 70px; height: 70px;">
+                    <i class="bi bi-receipt text-success fs-2"></i>
+                </div>
+                <h5 class="fw-bold">Utility Payments</h5>
+                <p class="text-muted small mb-0">Pay your internet, electricity, or gas bills directly from your dashboard. Keep track of all your monthly expenses.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5 bg-dark text-white p-5 shadow-lg" style="border-radius: 20px;">
+    <div class="row align-items-center">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+            <h2 class="fw-bold mb-3">Accounts tailored for you.</h2>
+            <p class="opacity-75 mb-4">Choose the financial tool that fits your lifestyle. Open multiple accounts in different currencies.</p>
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn btn-light fw-bold px-4 rounded-pill text-dark">Get Started Now</a>
+            }
+        </div>
+        <div class="col-lg-8">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="p-4 rounded-3 h-100" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                        <i class="bi bi-wallet2 fs-2 text-info mb-3 d-block"></i>
+                        <h5 class="fw-bold">Debit Account</h5>
+                        <p class="small opacity-75 mb-0">Your standard everyday account. Spend only what you have with zero maintenance fees. Available in RON, EUR, and USD.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-4 rounded-3 h-100" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                        <i class="bi bi-graph-up-arrow fs-2 text-warning mb-3 d-block"></i>
+                        <h5 class="fw-bold">Credit Account</h5>
+                        <p class="small opacity-75 mb-0">Get a predefined limit of up to 5,000 RON. Perfect for emergency expenses, large purchases, or paying bills when cash is tight.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

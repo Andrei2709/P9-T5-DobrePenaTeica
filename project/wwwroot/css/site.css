@@ -1,0 +1,51 @@
+/* Definirea culorilor principale ale bancii */
+:root {
+    --bank-primary: #512DA8; /* Mov Regal / Indigo */
+    --bank-primary-hover: #311B92; /* Un mov mai inchis pentru hover */
+    --bank-bg: #f8f9fa; /* Un gri foarte deschis pentru fundal, modern si curat */
+}
+
+body {
+    background-color: var(--bank-bg);
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Clase utilitare pentru culori */
+.text-bank {
+    color: var(--bank-primary) !important;
+}
+
+/* Butoane personalizate pentru banca */
+.btn-bank {
+    background-color: var(--bank-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+    .btn-bank:hover {
+        background-color: var(--bank-primary-hover);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(81, 45, 168, 0.3);
+    }
+
+/* Design modern pentru containere (Carduri Bootstrap suprascrise) */
+.card-bank {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+    .card-bank:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    }
+
+/* Spatiere suplimentara pentru main content */
+main {
+    min-height: 75vh;
+}

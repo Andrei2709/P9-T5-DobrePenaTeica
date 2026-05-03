@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BankName</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        .text-bank {
+            color: #6a11cb !important;
+        }
+
+        .btn-bank {
+            background: #6a11cb;
+            color: white;
+            border: none;
+        }
+
+            .btn-bank:hover {
+                background: #2575fc;
+                color: white;
+            }
+    </style>
+</head>
+<body class="bg-light">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-4 py-3">
+            <div class="container">
+                <a class="navbar-brand fw-bold fs-4 text-bank" asp-controller="Home" asp-action="Index">BankName</a>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 ms-4">
+                        <li class="nav-item"><a class="nav-link text-dark fw-semibold" asp-controller="Home" asp-action="Index">Home</a></li>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Employee"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-danger fw-bold" asp-controller="Employee" asp-action="Dashboard">
+                                        <i class="bi bi-shield-lock-fill me-1"></i> Admin Panel
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item"><a class="nav-link text-dark fw-semibold" asp-controller="Transfers" asp-action="Index">Transfers</a></li>
+                                <li class="nav-item"><a class="nav-link text-dark fw-semibold" asp-controller="Payments" asp-action="Index">Payments</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-bank fw-bold" asp-controller="Cards" asp-action="Index">
+                                        <i class="bi bi-credit-card-2-front me-1"></i> My Cards
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <ul class="navbar-nav align-items-center">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Employee"))
+                            {
+                                <li class="nav-item me-3">
+                                    <span class="nav-link text-muted">Logged in as <strong class="text-danger">Admin</strong></span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item me-3">
+                                    <a class="nav-link text-muted" asp-controller="Profile" asp-action="Index">
+                                        Logged in as <strong class="text-bank text-decoration-underline">@User.Identity.Name</strong>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Log Out</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item me-2"><a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Log In</a></li>
+                            <li class="nav-item"><a class="btn btn-bank px-3" asp-controller="Account" asp-action="Register">Open Account</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container"><main role="main" class="pb-3">@RenderBody()</main></div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

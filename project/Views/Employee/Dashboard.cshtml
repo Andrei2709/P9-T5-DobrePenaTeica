@@ -1,0 +1,181 @@
+﻿@model IEnumerable<ProiectBanking.Models.Client>
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var activeClients = ViewBag.ActiveClients as IEnumerable<ProiectBanking.Models.Client>;
+    var pendingTransactions = ViewBag.PendingTransactions as IEnumerable<ProiectBanking.Models.Transaction>;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-danger"><i class="bi bi-shield-lock-fill me-2"></i>Admin Dashboard</h2>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success shadow-sm border-0 border-start border-5 border-success mb-4 fw-bold">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger shadow-sm border-0 border-start border-5 border-danger mb-4 fw-bold">
+            <i class="bi bi-exclamation-octagon-fill me-2"></i> @TempData["Error"]
+        </div>
+    }
+
+    <!-- ROW 1: Pending Accounts and Large Transactions -->
+    <div class="row mb-5">
+
+        <!-- SECTION 1: PENDING ACCOUNTS -->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="card shadow-sm border-0 h-100" style="border-radius: 15px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4 text-warning"><i class="bi bi-person-lines-fill me-2"></i>Pending Accounts</h5>
+                    @if (Model != null && Model.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var client in Model)
+                            {
+                                <li class="list-group-item px-0 py-3 border-bottom">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <strong class="mb-0 fs-5">@client.FirstName @client.LastName</strong><br />
+                                            <small class="text-muted">@client.Email | SSN/CNP: @client.CNP</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end gap-2 mt-2">
+                                        <form asp-controller="Employee" asp-action="ApproveClient" method="post">
+                                            <input type="hidden" name="clientId" value="@client.Id" />
+                                            <button type="submit" class="btn btn-success btn-sm fw-bold"><i class="bi bi-check-lg me-1"></i> Approve</button>
+                                        </form>
+                                        <form asp-controller="Employee" asp-action="RejectClient" method="post" onsubmit="return confirm('Are you sure you want to reject and delete this account?');">
+                                            <input type="hidden" name="clientId" value="@client.Id" />
+                                            <button type="submit" class="btn btn-danger btn-sm fw-bold"><i class="bi bi-trash me-1"></i> Reject</button>
+                                        </form>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">No accounts waiting for approval.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: LARGE TRANSACTIONS (AML) -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100" style="border-radius: 15px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4 text-danger"><i class="bi bi-shield-exclamation me-2"></i>Large Transactions (AML)</h5>
+                    @if (pendingTransactions != null && pendingTransactions.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var trx in pendingTransactions)
+                            {
+                                <li class="list-group-item bg-light border-0 mb-3 rounded p-3 shadow-sm">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <span class="badge bg-danger mb-2">Pending Approval</span>
+                                            <strong class="d-block">@trx.SourceAccount.Client.FirstName @trx.SourceAccount.Client.LastName</strong>
+                                            <small class="text-muted">To: @trx.DestinationInfo</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <h5 class="text-dark fw-bold mb-0">@trx.Amount.ToString("N2") @trx.Currency</h5>
+                                            <small class="text-muted">@trx.TransactionDate.ToString("dd MMM, HH:mm")</small>
+                                        </div>
+                                    </div>
+                                    <p class="small text-muted fst-italic mb-3">Ref: @trx.Description</p>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <form asp-controller="Employee" asp-action="ApproveTransaction" method="post">
+                                            <input type="hidden" name="transactionId" value="@trx.Id" />
+                                            <button type="submit" class="btn btn-success btn-sm fw-bold px-3">Allow</button>
+                                        </form>
+                                        <form asp-controller="Employee" asp-action="RejectTransaction" method="post" onsubmit="return confirm('Block this transfer? The funds will be returned to the client.');">
+                                            <input type="hidden" name="transactionId" value="@trx.Id" />
+                                            <button type="submit" class="btn btn-danger btn-sm fw-bold px-3">Block & Refund</button>
+                                        </form>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">All transactions are within secure limits.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROW 2: Active Clients Accordion -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0 mb-5" style="border-radius: 15px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4 text-success"><i class="bi bi-people-fill me-2"></i>Active Clients & Deposits</h5>
+
+                    @if (activeClients != null && activeClients.Any())
+                    {
+                        <div class="accordion" id="accordionClients">
+                            @foreach (var client in activeClients)
+                            {
+                                <div class="accordion-item border-0 border-bottom">
+                                    <h2 class="accordion-header" id="heading-@client.Id">
+                                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@client.Id" aria-expanded="false">
+                                            <i class="bi bi-person-circle text-muted me-2 fs-5"></i>
+                                            @client.FirstName @client.LastName <span class="badge bg-light text-dark border ms-3">@client.Email</span>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse-@client.Id" class="accordion-collapse collapse" data-bs-parent="#accordionClients">
+                                        <div class="accordion-body bg-light rounded m-3 p-3">
+
+                                            @if (client.BankAccounts != null && client.BankAccounts.Any())
+                                            {
+                                                <ul class="list-group list-group-flush rounded">
+                                                    @foreach (var account in client.BankAccounts)
+                                                    {
+                                                        <li class="list-group-item bg-white d-flex justify-content-between align-items-center p-3 mb-2 shadow-sm rounded border-0">
+                                                            <div>
+                                                                <span class="badge bg-primary me-2">@account.AccountType</span>
+                                                                <strong class="font-monospace text-muted">@account.IBAN</strong>
+                                                                <div class="mt-1 small">
+                                                                    Balance: <strong class="text-success fs-6">@account.Balance.ToString("N2") @account.Currency</strong>
+                                                                </div>
+                                                            </div>
+
+                                                            <form asp-controller="Employee" asp-action="DepositMoney" method="post" class="d-flex align-items-center gap-2">
+                                                                <input type="hidden" name="accountId" value="@account.Id" />
+                                                                <div class="input-group input-group-sm" style="width: 200px;">
+                                                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-cash"></i></span>
+                                                                    <input type="number" step="0.01" min="1" name="amount" class="form-control border-start-0" placeholder="Amount" required />
+                                                                    <button type="submit" class="btn btn-success fw-bold px-3">Add</button>
+                                                                </div>
+                                                            </form>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-muted small mb-0"><i class="bi bi-info-circle me-1"></i>No accounts opened.</p>
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted my-4">There are no active clients in the system yet.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

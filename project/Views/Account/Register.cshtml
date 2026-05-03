@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Open an Account";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow-lg border-0 mt-4" style="border-radius: 15px;">
+                <div class="card-header bg-white text-center pb-0 border-0 pt-5">
+                    <h3 class="fw-bold text-bank">Create an Account</h3>
+                    <p class="text-muted small">Join us and start managing your money smartly.</p>
+                </div>
+                <div class="card-body p-4 p-md-5 pt-0">
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger shadow-sm border-0 border-start border-5 border-danger p-3 mb-4 small fw-bold">
+                            <i class="bi bi-exclamation-octagon-fill me-2"></i> @TempData["Error"]
+                        </div>
+                    }
+
+                    <form asp-controller="Account" asp-action="Register" method="post">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="inputFirstName" name="FirstName" placeholder="First Name" required />
+                                    <label for="inputFirstName" class="text-muted small">First Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="inputLastName" name="LastName" placeholder="Last Name" required />
+                                    <label for="inputLastName" class="text-muted small">Last Name</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control bg-light border-0" id="inputEmail" name="Email" placeholder="name@example.com" required />
+                                    <label for="inputEmail" class="text-muted small">Email Address</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="inputPhone" name="PhoneNumber" placeholder="Phone Number" />
+                                    <label for="inputPhone" class="text-muted small">Phone Number</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="inputCNP" name="CNP" placeholder="CNP" />
+                                    <label for="inputCNP" class="text-muted small">CNP</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="inputAddress" name="Address" placeholder="Full Address" />
+                                    <label for="inputAddress" class="text-muted small">Residential Address</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control bg-light border-0" id="inputPassword" name="Password" placeholder="Password" required />
+                                    <label for="inputPassword" class="text-muted small">Password</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control bg-light border-0" id="inputConfirmPassword" name="ConfirmPassword" placeholder="Confirm Password" required />
+                                    <label for="inputConfirmPassword" class="text-muted small">Confirm Password</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-bank btn-lg fw-bold shadow-sm py-3" style="border-radius: 10px;">Register Account</button>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="card-footer text-center py-4 bg-white border-0" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+                    <p class="small mb-0 text-muted">
+                        Already have an account?
+                        <a asp-controller="Account" asp-action="Login" class="text-decoration-none fw-bold text-bank">Log in here!</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

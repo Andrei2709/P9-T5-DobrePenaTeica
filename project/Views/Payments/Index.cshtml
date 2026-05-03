@@ -1,0 +1,66 @@
+﻿@model IEnumerable<ProiectBanking.Models.BankAccount>
+@{
+    ViewData["Title"] = "Payments & Utilities";
+}
+
+<div class="row mt-4 justify-content-center">
+    <div class="col-md-8">
+        <h2 class="fw-bold text-bank mb-4">Pay Bills & Utilities</h2>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger shadow-sm border-0 border-start border-5 border-danger">
+                @TempData["Error"]
+            </div>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success shadow-sm border-0 border-start border-5 border-success">
+                @TempData["Success"]
+            </div>
+        }
+
+        <div class="card card-bank p-4 shadow-sm">
+            <form asp-controller="Payments" asp-action="ProcessPayment" method="post">
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted text-uppercase small">Select Provider</label>
+                    <select name="Provider" class="form-select bg-light" required>
+                        <option value="" disabled selected>Choose a utility provider...</option>
+                        <option value="Digi Romania">Digi Romania (Internet/TV)</option>
+                        <option value="Enel Energie">Enel Energie (Electricity)</option>
+                        <option value="Engie">Engie (Gas)</option>
+                        <option value="Vodafone">Vodafone (Mobile)</option>
+                        <option value="Local Taxes">City Hall (Local Taxes)</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-muted text-uppercase small">Customer Code / Invoice Number</label>
+                    <input type="text" name="UtilityCode" class="form-control bg-light" placeholder="e.g. 1029384756" required />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-semibold text-muted text-uppercase small">From Account</label>
+                        <select name="SourceAccountId" class="form-select bg-light" required>
+                            @foreach (var acc in Model)
+                            {
+                                <option value="@acc.Id">@acc.Currency (@acc.Balance.ToString("N2") @acc.Currency)</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-semibold text-muted text-uppercase small">Amount</label>
+                        <input type="number" name="Amount" step="0.01" min="0.01" class="form-control bg-light" placeholder="0.00" required />
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-bank px-5 fw-bold shadow-sm">Confirm Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
