@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
@@ -46,10 +46,8 @@ namespace ProiectBanking.Controllers
             var accountIds = client.BankAccounts.Select(a => a.Id).ToList();
             var clientIbans = client.BankAccounts.Select(a => a.IBAN).ToList();
 
-            // FIX: Aduce tranzacțiile unde ești Sursă (trimise de tine) 
-            // SAU unde ești Destinație DAR tranzacția a fost deja Aprobată (Completed).
             ViewBag.Transactions = await _context.Transactions
-                .Include(t => t.SourceAccount) // Includem sursa pentru a ști CINE a trimis banii
+                .Include(t => t.SourceAccount)
                 .Where(t => accountIds.Contains(t.SourceAccountId) ||
                            (clientIbans.Contains(t.DestinationInfo) && t.Status == "Completed"))
                 .OrderByDescending(t => t.TransactionDate).Take(15).ToListAsync();
@@ -75,7 +73,7 @@ namespace ProiectBanking.Controllers
             {
                 ClientId = userId,
                 IBAN = generatedIban,
-                Currency = Currency,
+                Currency = Currency ?? "RON",
                 AccountType = AccountType ?? "Debit",
                 Balance = 0.00m,
                 CreditLimit = (AccountType == "Credit") ? 5000.00m : 0.00m,
@@ -96,9 +94,27 @@ namespace ProiectBanking.Controllers
 
             amount = Math.Round(amount, 2);
 
-            if (sourceAccount == null || amount <= 0 || sourceAccount.Balance < amount)
+            if (sourceAccount == null || amount <= 0)
             {
-                TempData["Error"] = "Invalid transfer or insufficient funds.";
+                TempData["Error"] = "Invalid transfer request.";
+                return RedirectToAction("Index");
+            }
+
+            // Aflăm cine este destinatarul (dacă e din banca noastră)
+            var destAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.IBAN == destinationIban);
+
+            // BARIERA DE VALUTĂ (FOREIGN EXCHANGE BLOCK)
+            if (destAccount != null && sourceAccount.Currency != destAccount.Currency)
+            {
+                TempData["Error"] = $"Transfers between different currencies ({sourceAccount.Currency} to {destAccount.Currency}) are not allowed.";
+                return RedirectToAction("Index");
+            }
+
+            decimal availableFunds = sourceAccount.Balance + sourceAccount.CreditLimit;
+
+            if (availableFunds < amount)
+            {
+                TempData["Error"] = "Insufficient funds or credit limit exceeded.";
                 return RedirectToAction("Index");
             }
 
@@ -121,7 +137,6 @@ namespace ProiectBanking.Controllers
 
             if (!requiresApproval)
             {
-                var destAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.IBAN == destinationIban);
                 if (destAccount != null)
                 {
                     destAccount.Balance = Math.Round(destAccount.Balance + amount, 2);
