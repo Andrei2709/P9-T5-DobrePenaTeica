@@ -1,67 +1,93 @@
-﻿@model ProiectBanking.Models.Client
+@model ProiectBanking.Models.Client
 @{
     ViewData["Title"] = "Edit Profile";
 }
 
-<div class="container mt-4">
+<div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="fw-bold text-bank mb-4">Edit Profile Settings</h2>
+        <div class="col-lg-8">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold"><i class="bi bi-person-lines-fill me-2"></i>Profile Settings</h2>
+                <a asp-controller="Profile" asp-action="Index" class="btn btn-outline-secondary btn-sm fw-bold">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
 
             @if (TempData["Error"] != null)
             {
-                <div class="alert alert-danger border-0 shadow-sm mb-4">@TempData["Error"]</div>
+                <div class="alert alert-danger shadow-sm border-0 border-start border-5 border-danger p-3 mb-4 fw-bold">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+                </div>
             }
 
-            <form asp-controller="Profile" asp-action="Edit" method="post">
+            <div class="card shadow-lg border-0" style="border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
 
-                <div class="card card-bank p-4 shadow-sm mb-4 border-0" style="border-radius: 15px;">
-                    <h5 class="fw-bold text-bank mb-4">Personal Information</h5>
+                    <form asp-controller="Profile" asp-action="Edit" method="post">
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold small text-muted">First Name</label>
-                            <input type="text" name="FirstName" class="form-control" value="@Model.FirstName" required />
+                        <!-- SECȚIUNEA 1: Date Personale -->
+                        <h5 class="text-bank fw-bold mb-3 border-bottom pb-2">Personal Information</h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">First Name</label>
+                                <input type="text" class="form-control bg-light border-0" name="FirstName" value="@Model.FirstName" required />
+                            </div>
+                            <div class="col-md-6 mt-3 mt-md-0">
+                                <label class="form-label text-muted small">Last Name</label>
+                                <input type="text" class="form-control bg-light border-0" name="LastName" value="@Model.LastName" required />
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold small text-muted">Last Name</label>
-                            <input type="text" name="LastName" class="form-control" value="@Model.LastName" required />
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Phone Number</label>
+                                <input type="text" class="form-control bg-light border-0" name="PhoneNumber" value="@Model.PhoneNumber" />
+                            </div>
+                            <div class="col-md-6 mt-3 mt-md-0">
+                                <label class="form-label text-muted small">Email Address (Read-only)</label>
+                                <input type="email" class="form-control bg-light border-0 text-muted" value="@Model.Email" readonly disabled />
+                                <small class="text-muted" style="font-size: 0.7rem;">Contact support to change email.</small>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Phone Number</label>
-                        <input type="text" name="PhoneNumber" class="form-control" value="@Model.PhoneNumber" />
-                    </div>
+                        <div class="mb-5">
+                            <label class="form-label text-muted small">Residential Address</label>
+                            <input type="text" class="form-control bg-light border-0" name="Address" value="@Model.Address" />
+                        </div>
 
-                    <div class="mb-0">
-                        <label class="form-label fw-bold small text-muted">Address</label>
-                        <input type="text" name="Address" class="form-control" value="@Model.Address" placeholder="Enter your address..." />
-                    </div>
+                        <!-- SECȚIUNEA 2: Schimbare Parolă -->
+                        <h5 class="text-bank fw-bold mb-3 border-bottom pb-2"><i class="bi bi-shield-lock me-2"></i>Change Password</h5>
+                        <p class="text-muted small mb-4">Leave these fields empty if you do not wish to change your password.</p>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Current Password</label>
+                            <input type="password" class="form-control bg-light border-0" name="OldPassword" placeholder="Enter current password" />
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">New Password</label>
+                                <input type="password" class="form-control bg-light border-0" name="NewPassword" placeholder="New password" />
+                            </div>
+                            <div class="col-md-6 mt-3 mt-md-0">
+                                <label class="form-label text-muted small">Confirm New Password</label>
+                                <input type="password" class="form-control bg-light border-0" name="ConfirmPassword" placeholder="Confirm new password" />
+                            </div>
+                        </div>
+
+                        <!-- Buton Submit -->
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-bank btn-lg fw-bold shadow-sm" style="border-radius: 10px;">
+                                Save Changes
+                            </button>
+                        </div>
+
+                    </form>
+
                 </div>
-
-                <div class="card card-bank p-4 shadow-sm mb-4 border-0" style="border-radius: 15px; background-color: #fdfcfe;">
-                    <h5 class="fw-bold text-bank mb-4">Security</h5>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Current Password (Required only for password change)</label>
-                        <input type="password" name="OldPassword" class="form-control" />
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold small text-muted">New Password</label>
-                            <input type="password" name="NewPassword" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold small text-muted">Confirm New Password</label>
-                            <input type="password" name="ConfirmPassword" class="form-control" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-end">
-                    <button type="submit" class="btn btn-bank px-5 fw-bold shadow-sm">Update Profile</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
